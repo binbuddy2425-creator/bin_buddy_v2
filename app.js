@@ -204,7 +204,7 @@ async function handleProcessImage(event) {
   addLoadingElement(parent);
   console.log(photoBase64);
   const response = await fetch(
-    "http://localhost:5000/classify",
+    "https://78pi2wk1zg.execute-api.ap-southeast-2.amazonaws.com/classify",
     {
       method: "POST",
       headers: {
