@@ -204,7 +204,7 @@ async function handleProcessImage(event) {
   addLoadingElement(parent);
   console.log(photoBase64);
   const response = await fetch(
-    "https://78pi2wk1zg.execute-api.ap-southeast-2.amazonaws.com/classify",
+    "http://localhost:5000/classify",
     {
       method: "POST",
       headers: {
@@ -230,6 +230,7 @@ async function handleProcessImage(event) {
     }
   );
   const data = await response.json();
+  console.log({data})
   const result = data.result;
   if (!result) {
     alert("Failed to process the image. Try again!");
