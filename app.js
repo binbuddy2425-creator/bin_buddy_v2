@@ -205,15 +205,15 @@ async function handleProcessImage(event) {
   console.log(photoBase64);
   try {
     const response = await fetch(
-    "https://78pi2wk1zg.execute-api.ap-southeast-2.amazonaws.com/classify",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        image_base64: photoBase64,
-        prompt: `Identify the item in the photo. Tell me which type of waste it is from the classification system below:
+      "https://78pi2wk1zg.execute-api.ap-southeast-2.amazonaws.com/classify",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          image_base64: photoBase64,
+          prompt: `Identify the item in the photo. Tell me which type of waste it is from the classification system below:
         TRI-SORT SYSTEM: Wet, Dry, Electronic
         COMMON-SORT SYSTEM: Metal, Paper, Plastic, Glass, General Waste
         COLOR-CODED SYSTEM: Organic, Recycle, Non-Recycle, Hazardous
@@ -227,26 +227,29 @@ async function handleProcessImage(event) {
         
         Provide me just an object that is valid to be parsed with JSON in javascript with all these details. You can take keys from the sample object below:
         {name: "answer",tri_sort: "answer",common_sort: "answer",color_sort: "answer",fun_fact: "answer"}`,
-      }),
-    }
-  );
-  const data = await response.json();
-  } catch (err) {
-    console.error(err)
-    alert("Failed to process image. Error occured while calling the server. Try Again!")
-  }
-  console.log({data})
-  const result = data.result;
-  if (!result) {
-    alert("Failed to process the image. Try again!");
-  }
+        }),
+      }
+    );
+    const data = await response.json();
 
-  try {
-    const resultData = JSON.parse(result);
-    processResult(resultData);
+    console.log({ data });
+    const result = data.result;
+    if (!result) {
+      alert("Failed to process the image. Try again!");
+    }
+
+    try {
+      const resultData = JSON.parse(result);
+      processResult(resultData);
+    } catch (err) {
+      console.error(err);
+      alert(`Failed to process the image. Try again! ${err}`);
+    }
   } catch (err) {
     console.error(err);
-    alert(`Failed to process the image. Try again! ${err}`);
+    alert(
+      "Failed to process image. Error occured while calling the server. Try Again!"
+    );
   }
   removeLoadingElement(parent);
 }
