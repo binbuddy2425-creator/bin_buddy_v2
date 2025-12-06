@@ -203,7 +203,8 @@ async function handleProcessImage(event) {
   const parent = event.target.parentElement;
   addLoadingElement(parent);
   console.log(photoBase64);
-  const response = await fetch(
+  try {
+    const response = await fetch(
     "https://78pi2wk1zg.execute-api.ap-southeast-2.amazonaws.com/classify",
     {
       method: "POST",
@@ -230,6 +231,10 @@ async function handleProcessImage(event) {
     }
   );
   const data = await response.json();
+  } catch (err) {
+    console.error(err)
+    alert("Failed to process image. Error occured while calling the server. Try Again!")
+  }
   console.log({data})
   const result = data.result;
   if (!result) {
@@ -241,7 +246,7 @@ async function handleProcessImage(event) {
     processResult(resultData);
   } catch (err) {
     console.error(err);
-    alert("Failed to process the image. Try again!");
+    alert(`Failed to process the image. Try again! ${err}`);
   }
   removeLoadingElement(parent);
 }
