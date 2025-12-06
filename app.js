@@ -226,7 +226,10 @@ async function handleProcessImage(event) {
         Also, provide me 1 paragraph of fun fact about the type of waste it is.
         
         Provide me just an object that is valid to be parsed with JSON in javascript with all these details. You can take keys from the sample object below:
-        {name: "answer",tri_sort: "answer",common_sort: "answer",color_sort: "answer",fun_fact: "answer"}`,
+        {name: "answer",tri_sort: "answer",common_sort: "answer",color_sort: "answer",fun_fact: "answer"}
+        
+        In case, you fail to identify the image in any condition, return the following object
+        {error: true}`,
         }),
       }
     );
@@ -240,7 +243,11 @@ async function handleProcessImage(event) {
 
     try {
       const resultData = JSON.parse(result);
-      processResult(resultData);
+      if (resultData.error) {
+        alert("Server failed to identify the image. Please try again with different image!")
+      } else{
+        processResult(resultData);
+      }
     } catch (err) {
       console.error(err);
       alert(`Failed to process the image. Try again! ${err}`);
