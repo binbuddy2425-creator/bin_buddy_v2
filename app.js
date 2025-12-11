@@ -213,23 +213,42 @@ async function handleProcessImage(event) {
         },
         body: JSON.stringify({
           image_base64: photoBase64,
-          prompt: `Identify the item in the photo. Tell me which type of waste it is from the classification system below:
-        TRI-SORT SYSTEM: Wet, Dry, Electronic
-        COMMON-SORT SYSTEM: Metal, Paper, Plastic, Glass, General Waste
-        COLOR-CODED SYSTEM: Organic, Recycle, Non-Recycle, Hazardous
-        Pick one type from each of the above three categories.
-        
-        Name of the item
-        Option from TRI-SORT SYSTEM
-        Option from COMMON-SORT SYSTEM
-        Option from COLOR-CODED SYSTEM
-        Also, provide me 1 paragraph of fun fact about the type of waste it is.
-        
-        Provide me just an object that is valid to be parsed with JSON in javascript with all these details. You can take keys from the sample object below:
-        {name: "answer",tri_sort: "answer",common_sort: "answer",color_sort: "answer",fun_fact: "answer"}
-        
-        In case, you fail to identify the image in any condition, return the following object
-        {error: true}`,
+          prompt: `
+            You are an image waste-classification assistant.
+
+            You will be given a photo. Your job is to:
+            1. Identify the item in the photo.
+            2. Classify it using these systems:
+
+            TRI-SORT SYSTEM: Wet, Dry, Electronic
+            COMMON-SORT SYSTEM: Metal, Paper, Plastic, Glass, General Waste
+            COLOR-CODED SYSTEM: Organic, Recycle, Non-Recycle, Hazardous
+
+            Pick exactly ONE option from each of the three systems.
+
+            You MUST follow these rules for the OUTPUT:
+
+            - Respond with ONLY a single JSON object and NOTHING else.
+            - The JSON MUST be valid for JSON.parse in JavaScript.
+            - Do NOT wrap the JSON in backticks or a code block.
+            - Do NOT add comments, explanations, or extra keys.
+            - All keys and string values MUST use double quotes.
+            - Do NOT include trailing commas.
+
+            If you can identify the item, the JSON MUST have this exact shape:
+
+            {
+              "name": "<name of the item>",
+              "tri_sort": "<Wet or Dry or Electronic>",
+              "common_sort": "<Metal or Paper or Plastic or Glass or General Waste>",
+              "color_sort": "<Organic or Recycle or Non-Recycle or Hazardous>",
+              "fun_fact": "<1 paragraph fun fact about this type of waste>"
+            }
+
+            If you CANNOT identify the item for any reason, respond with EXACTLY:
+
+            {"error": true}
+          `,
         }),
       }
     );
@@ -262,3 +281,4 @@ async function handleProcessImage(event) {
 }
 
 processAction.addEventListener("click", handleProcessImage);
+
