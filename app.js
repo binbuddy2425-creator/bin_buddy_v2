@@ -203,6 +203,13 @@ async function handleProcessImage(event) {
   const parent = event.target.parentElement;
   addLoadingElement(parent);
   console.log(photoBase64);
+
+  const playgroundCardContainer = document.querySelector(
+    "#playground .card-container"
+  );
+
+  cleanupPlayground(playgroundCardContainer);
+  
   try {
     const response = await fetch(
       "https://78pi2wk1zg.execute-api.ap-southeast-2.amazonaws.com/classify",
@@ -281,4 +288,5 @@ async function handleProcessImage(event) {
 }
 
 processAction.addEventListener("click", handleProcessImage);
+
 
